@@ -1,5 +1,3 @@
-background-image: url("image/")
-
 # Presentation List
 
 1. かわロボ
