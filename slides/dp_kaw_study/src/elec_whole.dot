@@ -1,0 +1,70 @@
+
+digraph rsx {
+    //newrank=true;
+
+    graph [
+      compound = true
+      label = "かわロボ 電装系構成"
+    ]
+
+    propo [shape = box, label = "プロポ", image = "./ext/6k.png", width=1.5, height=1.5, fixedsize=true]
+
+    subgraph cluster_0 {
+      label = "かわロボ";
+      labeljust = "l";
+
+      ardbeg [shape = box, label = "", image = "./ext/ardbeg.png", width=1.5, height=1.0, fixedsize=true]
+      subgraph cluster_2 {
+        label = "電装系";
+
+        battery  [shape = box, label = "LF2200-6.6V"          , image = "./ext/55102_thmb.png", labelloc = "t", width=2.0, height=1.5, fixedsize=true];
+          
+        //vdd      [shape = box, label = "VDD 6.6V"];
+        //vcc      [shape = box, label = "VCC 6.6V"];
+
+        receiver [shape = box, label = "受信機"              , image = "./ext/r3008sb.png", labelloc = "t", width=1.5, height=1.5, fixedsize=true];
+        arm_amp  [shape = box, label = "アーム用モータアンプ", image = "./ext/mc402cr.png", labelloc = "b", width=2.0, height=2.0, fixedsize = true];
+        rleg_amp [shape = box, label = "右脚用モータアンプ"  , image = "./ext/mc402cr.png", labelloc = "b", width = 2.0, height = 2.0, fixedsize = true];
+        lleg_amp [shape = box, label = "左脚用モータアンプ"  , image = "./ext/mc402cr.png", labelloc = "b", width = 2.0, height = 2.0, fixedsize = true];
+
+        battery  -> arm_amp  [label = "6.6[V]"]
+        arm_amp  -> receiver [label = "5.0[V]"]
+        receiver -> arm_amp  [label = "PPM"]
+        receiver -> rleg_amp [label = "PPM"]
+        receiver -> lleg_amp [label = "PPM"]
+
+        {rank = same; receiver battery}
+        {rank = same; arm_amp rleg_amp lleg_amp}
+      }
+
+      subgraph cluster_3 {
+        label = "メカ";
+          
+        arm_act  [shape = box, label = "アーム用モータ", image = "./ext/g_motor380.png", labelloc = "b", width=2.0, height=2.0, fixedsize = true];
+        rleg_fact  [shape = box, label = "右前脚用モータ", image = "./ext/g_motor380.png", labelloc = "b", width=2.0, height=2.0, fixedsize = true];
+        rleg_bact  [shape = box, label = "右後脚用モータ", image = "./ext/g_motor380.png", labelloc = "b", width=2.0, height=2.0, fixedsize = true];
+        lleg_fact  [shape = box, label = "左前脚用モータ", image = "./ext/g_motor380.png", labelloc = "b", width=2.0, height=2.0, fixedsize = true];
+        lleg_bact  [shape = box, label = "左後脚用モータ", image = "./ext/g_motor380.png", labelloc = "b", width=2.0, height=2.0, fixedsize = true];
+
+        {rank = same; arm_act rleg_fact rleg_bact lleg_fact lleg_bact}
+      }
+
+      arm_amp -> arm_act    [label = "PWM"]
+      rleg_amp -> rleg_fact [label = "PWM"]
+      rleg_amp -> rleg_bact [label = "PWM"]
+      lleg_amp -> lleg_fact [label = "PWM"]
+      lleg_amp -> lleg_bact [label = "PWM"]
+
+    }
+
+    propo -> receiver [style = dashed, label = "無線"];
+
+    //ardbeg -> receiver [lhead = "cluster_2"];
+    //ardbeg -> arm_act [lhead = "cluster_3"];
+
+    //{rank = ardbeg; propo; receiver; arm_amp; rleg_amp; lleg_amp}
+    //{rank = same; arm_amp rleg_amp lleg_amp}
+    //{rank = same; receiver battery ardbeg}
+    //{rank = same; arm_act rleg_fact rleg_bact lleg_fact lleg_bact}
+}
+
